@@ -1,6 +1,9 @@
 const gulp = require('gulp')
 const browserSync = require('browser-sync');
 const sass = require('gulp-sass')(require('sass'));
+const rename = require("gulp-rename");
+const autoprefixer = require('gulp-autoprefixer').default;
+const cleanCSS = require('gulp-clean-css');
 
 gulp.task('server', function(){
     browserSync.init({
@@ -13,6 +16,14 @@ gulp.task('server', function(){
 gulp.task('styles', function(){
     return gulp.src("src/sass/*.+(scss|sass)")
         .pipe(sass({style: 'compressed'}).on('error', sass.logError))
+        .pipe(rename({            
+            prefix: "",
+            suffix: ".min",            
+        }))
+        .pipe(autoprefixer({
+			cascade: false
+		}))
+        .pipe(cleanCSS({compatibility: 'ie8'}))
         .pipe(gulp.dest("src/css"))
         .pipe(browserSync.stream());
 })
